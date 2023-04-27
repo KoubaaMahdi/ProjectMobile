@@ -3,12 +3,14 @@ package com.example.fitnessappproject;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Register extends AppCompatActivity {
@@ -17,6 +19,8 @@ public class Register extends AppCompatActivity {
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
     private Button mRegisterButton;
+
+    private TextView mLoginTextView;
 
     private SQLiteDatabase mDatabase;
 
@@ -30,6 +34,7 @@ public class Register extends AppCompatActivity {
         mEmailEditText = findViewById(R.id.email);
         mPasswordEditText = findViewById(R.id.password);
         mRegisterButton = findViewById(R.id.register);
+        mLoginTextView = findViewById(R.id.login);
 
         // Open database
         mDatabase = new DatabaseHelper(this).getWritableDatabase();
@@ -39,6 +44,13 @@ public class Register extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 registerUser();
+            }
+        });
+        mLoginTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Register.this, Login.class);
+                startActivity(intent);
             }
         });
     }
