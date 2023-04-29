@@ -25,11 +25,7 @@ public class Login extends AppCompatActivity {
     private SQLiteDatabase mDatabase;
     private DatabaseHelper mDbHelper;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
+    public void init(){
         // Initialize views
         mEmailEditText = findViewById(R.id.email);
         mPasswordEditText = findViewById(R.id.password);
@@ -38,6 +34,15 @@ public class Login extends AppCompatActivity {
 
         // Initialize database helper
         mDbHelper = new DatabaseHelper(this);
+
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        init();
 
         // Open database
         mDatabase = mDbHelper.getReadableDatabase();

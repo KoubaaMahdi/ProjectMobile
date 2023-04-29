@@ -24,11 +24,7 @@ public class Register extends AppCompatActivity {
 
     private SQLiteDatabase mDatabase;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-
+    public void init (){
         // Initialize views
         mNameEditText = findViewById(R.id.name);
         mEmailEditText = findViewById(R.id.email);
@@ -38,6 +34,15 @@ public class Register extends AppCompatActivity {
 
         // Open database
         mDatabase = new DatabaseHelper(this).getWritableDatabase();
+
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register);
+
+        init();
 
         // Register button click listener
         mRegisterButton.setOnClickListener(new View.OnClickListener() {

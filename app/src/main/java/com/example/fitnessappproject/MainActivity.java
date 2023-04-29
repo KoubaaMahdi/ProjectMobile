@@ -12,20 +12,27 @@ public class MainActivity extends AppCompatActivity {
 
     private Button mBtnStart;
 
+    private RadioGroup radioGroup;
+
+    public void init(){
+        // Get a reference to the "Start" button
+        mBtnStart = findViewById(R.id.btn_start);
+        radioGroup = findViewById(R.id.radio_group);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        init();
 
-        // Get a reference to the "Start" button
-        mBtnStart = findViewById(R.id.btn_start);
 
         // Set an OnClickListener on the "Start" button
         mBtnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Determine which radio button is selected
-                RadioGroup radioGroup = findViewById(R.id.radio_group);
+
                 int selectedId = radioGroup.getCheckedRadioButtonId();
 
                 // Start a different activity depending on which radio button is selected

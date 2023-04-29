@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/cardback">
 
-    <!-- App bar -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:title="Fitness App"
-        android:titleTextColor="@android:color/white" />
+
 
     <!-- Main content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar">
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,7 +25,8 @@
                 android:layout_height="wrap_content"
                 android:text="Welcome to the Fitness App!"
                 android:textSize="@dimen/text_size_large"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/white"/>
 
             <!-- Exercise categories -->
             <TextView
@@ -38,35 +34,52 @@
                 android:layout_height="wrap_content"
                 android:text="Choose an exercise category:"
                 android:textSize="@dimen/text_size_medium"
-                android:layout_marginTop="@dimen/padding_large" />
-
+                android:layout_marginTop="@dimen/padding_large"
+                android:textColor="@color/white"/>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_large"
+                app:cardBackgroundColor="#2B0C81"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                >
             <RadioGroup
                 android:id="@+id/radio_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="@dimen/padding">
+                android:layout_marginTop="@dimen/padding"
+                >
 
                 <RadioButton
                     android:id="@+id/radio_cardio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cardio" />
+                    android:text="Cardio"
+                    android:layout_marginLeft="15dp"
+                    android:textColor="@color/white"/>
 
                 <RadioButton
                     android:id="@+id/radio_strength"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Strength" />
+                    android:text="Strength"
+                    android:layout_marginLeft="15dp"
+                    android:textColor="@color/white"/>
 
                 <RadioButton
                     android:id="@+id/radio_flexibility"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Flexibility" />
+                    android:text="Flexibility"
+                    android:textColor="@color/white"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="15dp"
+                    />
 
             </RadioGroup>
-
+            </androidx.cardview.widget.CardView>
 
             <!-- Start button -->
             <Button
@@ -76,7 +89,9 @@
                 android:text="Start"
                 android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
-                android:layout_marginTop="@dimen/padding_large" />
+                android:layout_marginTop="@dimen/padding_large"
+                android:backgroundTint="#2B0C81"
+                android:textColor="@color/white"/>
 
         </LinearLayout>
     </ScrollView>
