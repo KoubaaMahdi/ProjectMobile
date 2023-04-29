@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">FitnessAppProject</string>
+    <string name="Flex">Flexibility Exercises </string>
+    <string name="t_Flex1">Standing Hamstring Stretch</string>
+    <string name="d_Flex1">The standing hamstring stretch targets the muscles at the back of your thighs, including the hamstrings and glutes. This exercise helps to increase flexibility and mobility in the hips, legs, and lower back. Tight hamstrings can cause lower back pain and can lead to difficulty in performing activities that involve bending or lifting. By regularly practicing this exercise, you can improve your posture, prevent injury, and reduce discomfort in the lower back and hips.\n</string>
+    <string name="t_Flex2">Cobra Pose</string>
+    <string name="d_Flex2">Cobra pose is a yoga stretch that targets the muscles in your lower back, chest, and shoulders. This exercise helps to improve spinal mobility, increase the flexibility of the back muscles, and relieve tension in the shoulders and neck. Regular practice of this pose can help to reduce back pain, improve posture, and increase energy and vitality.</string>
+    <string name="t_Flex3">Seated Forward Fold\n</string>
+    <string name="d_Flex3">The seated forward fold is an excellent stretch for the hamstrings, lower back, and hips. This exercise helps to improve flexibility in these areas and can also help to reduce tension and stress. Tight hamstrings can cause discomfort in the lower back and hips, leading to difficulty in performing daily activities. By regularly practicing this exercise, you can improve your posture, increase your range of motion, and reduce the risk of injury.</string>
 </resources>
