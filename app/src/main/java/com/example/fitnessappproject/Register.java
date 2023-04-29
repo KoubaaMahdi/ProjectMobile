@@ -2,10 +2,11 @@ package com.example.fitnessappproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import com.example.fitnessappproject.DatabaseHelper;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,7 @@ public class Register extends AppCompatActivity {
 
     private SQLiteDatabase mDatabase;
 
+    private DatabaseHelper databaseHelper;
     public void init (){
         // Initialize views
         mNameEditText = findViewById(R.id.name);
@@ -33,7 +35,7 @@ public class Register extends AppCompatActivity {
         mLoginTextView = findViewById(R.id.login);
 
         // Open database
-        mDatabase = new DatabaseHelper(this).getWritableDatabase();
+        databaseHelper = new DatabaseHelper(this);
 
     }
 
@@ -73,38 +75,21 @@ public class Register extends AppCompatActivity {
             return;
         }
 
-        // Check if email already exists in database
-        if (emailExists(email)) {
-            Toast.makeText(this, "Email already registered", Toast.LENGTH_SHORT).show();
+        if (databaseHelper.checkUser(email,password)) {
+            Toast.makeText(Register.this, "Username already exists", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Insert user into database
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COLUMN_NAME, name);
-        values.put(DatabaseHelper.COLUMN_EMAIL, email);
-        values.put(DatabaseHelper.COLUMN_PASSWORD, password);
-        mDatabase.insert(DatabaseHelper.TABLE_USERS, null, values);
+        long result = databaseHelper.addUser(name, email,password);
 
-        // Display success message
-        Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show();
-
-        // Finish activity and return to login screen
+        if (result > 0) {
+            Toast.makeText(Register.this, "Registration successful", Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            Toast.makeText(Register.this, "Registration failed", Toast.LENGTH_SHORT).show();
+        }
         finish();
     }
 
-    private boolean emailExists(String email) {
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_USERS +
-                " WHERE " + DatabaseHelper.COLUMN_EMAIL + "=?", new String[]{email});
-        boolean exists = cursor.moveToFirst();
-        cursor.close();
-        return exists;
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // Close database
-        mDatabase.close();
-    }
 }

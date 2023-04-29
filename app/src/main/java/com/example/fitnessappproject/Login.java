@@ -70,22 +70,16 @@ public class Login extends AppCompatActivity {
         String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
 
-        // Query database for user with matching email and password
-        String[] projection = {DatabaseHelper.COLUMN_ID};
-        String selection = DatabaseHelper.COLUMN_EMAIL + " = ? AND " + DatabaseHelper.COLUMN_PASSWORD + " = ?";
-        String[] selectionArgs = {email, password};
-        Cursor cursor = null;
-
-            cursor = mDatabase.query(DatabaseHelper.TABLE_USERS, projection, selection, selectionArgs, null, null, null);
-
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
             // Check if user exists
-            if (cursor.moveToFirst()) {
+            if (mDbHelper.checkUser(email, password)) {
                 // User found, start main activity
-                Intent intent = new Intent(Login.this, MainActivity.class);
-                startActivity(intent);
-                cursor.close();
-                mDatabase.close();
-                finish();
+                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(Login.this, MainActivity.class);
+                startActivity(intent1);
             } else {
                 // User not found, display error message
                 Toast.makeText(Login.this, "Invalid email or password. Please try again or register.", Toast.LENGTH_SHORT).show();
