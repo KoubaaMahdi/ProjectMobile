@@ -1,19 +1,21 @@
 package com.example.fitnessappproject;
-
-import static android.content.ContentValues.TAG;
-
+import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 public class Login extends AppCompatActivity {
 
@@ -22,8 +24,6 @@ public class Login extends AppCompatActivity {
     private Button mLoginButton;
     private TextView mRegisterTextView;
 
-    private SQLiteDatabase mDatabase;
-    private DatabaseHelper mDbHelper;
 
     public void init(){
         // Initialize views
@@ -33,7 +33,7 @@ public class Login extends AppCompatActivity {
         mRegisterTextView = findViewById(R.id.register);
 
         // Initialize database helper
-        mDbHelper = new DatabaseHelper(this);
+
 
     }
 
@@ -43,9 +43,6 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         init();
-
-        // Open database
-        mDatabase = mDbHelper.getReadableDatabase();
 
         // Login button click listener
         mLoginButton.setOnClickListener(new View.OnClickListener() {
@@ -65,27 +62,51 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    private void loginUser() {
-        // Get user input
-        String email = mEmailEditText.getText().toString().trim();
-        String password = mPasswordEditText.getText().toString().trim();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-            return;
+        private void loginUser() {
+
+            final String email = mEmailEditText.getText().toString();
+            final String password = mPasswordEditText.getText().toString();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // Create a socket connection to the server
+                        Socket socket = new Socket("10.0.2.15", 8080);
+                        // Send the login credentials to the server
+                        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                        out.println("Login");
+                        out.println(email);
+                        out.println(password);
+
+                        // Get the response from the server
+                        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+                        final String response = in.readLine();
+
+                        // Close the socket connection
+                        socket.close();
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (response.equals("true")) {
+                                    // Login successful, start the main activity
+                                    Intent intent = new Intent(Login.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    // Login failed, show an error message
+                                    Toast.makeText(Login.this, "Login failed, please try again", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
         }
-            // Check if user exists
-            if (mDbHelper.checkUser(email, password)) {
-                // User found, start main activity
-                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                Intent intent1 = new Intent(Login.this, MainActivity.class);
-                startActivity(intent1);
-            } else {
-                // User not found, display error message
-                Toast.makeText(Login.this, "Invalid email or password. Please try again or register.", Toast.LENGTH_SHORT).show();
-            }
 
-
-
-
-}}
+}

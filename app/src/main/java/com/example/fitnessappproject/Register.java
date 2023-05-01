@@ -3,16 +3,20 @@ package com.example.fitnessappproject;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import com.example.fitnessappproject.DatabaseHelper;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 public class Register extends AppCompatActivity {
 
@@ -25,7 +29,7 @@ public class Register extends AppCompatActivity {
 
     private SQLiteDatabase mDatabase;
 
-    private DatabaseHelper databaseHelper;
+   ;
     public void init (){
         // Initialize views
         mNameEditText = findViewById(R.id.name);
@@ -35,7 +39,7 @@ public class Register extends AppCompatActivity {
         mLoginTextView = findViewById(R.id.login);
 
         // Open database
-        databaseHelper = new DatabaseHelper(this);
+
 
     }
 
@@ -62,34 +66,55 @@ public class Register extends AppCompatActivity {
             }
         });
     }
+    public void registerUser(){
+        final String name = mNameEditText.getText().toString();
+        final String email = mEmailEditText.getText().toString();
+        final String password = mPasswordEditText.getText().toString();
 
-    private void registerUser() {
-        // Get user input
-        String name = mNameEditText.getText().toString().trim();
-        String email = mEmailEditText.getText().toString().trim();
-        String password = mPasswordEditText.getText().toString().trim();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Create a socket connection to the server
+                    Socket socket = new Socket("10.0.2.15", 8080);
 
-        // Validate input
-        if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
+                    // Send the login credentials to the server
+                    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                    out.println("Register");
+                    out.println(name);
+                    out.println(email);
+                    out.println(password);
 
-        if (databaseHelper.checkUser(email,password)) {
-            Toast.makeText(Register.this, "Username already exists", Toast.LENGTH_SHORT).show();
-            return;
-        }
+                    // Get the response from the server
+                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    final String response = in.readLine();
 
-        long result = databaseHelper.addUser(name, email,password);
+                    // Close the socket connection
+                    socket.close();
 
-        if (result > 0) {
-            Toast.makeText(Register.this, "Registration successful", Toast.LENGTH_SHORT).show();
-            finish();
-        } else {
-            Toast.makeText(Register.this, "Registration failed", Toast.LENGTH_SHORT).show();
-        }
-        finish();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (response.equals("false")) {
+                                // Login successful, start the main activity
+                                Toast.makeText(Register.this, "Registration Success", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(Register.this, Login.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                // Login failed, show an error message
+                                Toast.makeText(Register.this, "Account Already Exists", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
+
+
 
 
 }
